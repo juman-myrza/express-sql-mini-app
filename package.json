@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/server.ts --watch",
+    "dev": "tsc && node dist/server.js",
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
