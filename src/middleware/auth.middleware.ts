@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express'
-import { BadRequestException, UnauthorizedError } from '../exceptions/error'
+import { BadRequestException, UnauthorizedError } from '../exceptions/errors'
 import TokenService from '../services/token.service'
 
 const authMiddleware = async (req: any, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import path from 'path'
 import DB from '../config/database'
 import * as fs from 'fs/promises'
-import { NotFoundException } from '../exceptions/error'
+import { NotFoundException } from '../exceptions/errors'
 
 export default class FileService {
   public files = DB.Files

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import FileService from '../services/file.service'
-import { CustomError, NotFoundException, ValidationException } from '../exceptions/error'
+import { CustomError, NotFoundException, ValidationException } from '../exceptions/errors'
 import path from 'path'
 import { getPagination } from '../utils/pagination'
 

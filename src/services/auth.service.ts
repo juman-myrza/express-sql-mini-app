@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import DB from '../config/database'
 import { CreateUserDto } from '../dto/user.dto'
 import TokenService from './token.service'
-import { Token } from '../interfaces/user.interface'
+import { BadRequestException, UnauthorizedError } from '../exceptions/errors'
 
 export default class AuthService {
   public users = DB.Users
@@ -14,7 +14,7 @@ export default class AuthService {
     const candidate = await this.users.findOne({ where: { id } })
 
     if (candidate) {
-      throw new Error(`User with this id ${id} already exists`)
+      throw new BadRequestException(`User with this id ${id} already exists`)
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -34,13 +34,13 @@ export default class AuthService {
     const user = await this.users.findOne({ where: { id } })
 
     if (!user) {
-      throw new Error(`User ${id} is not registered`)
+      throw new UnauthorizedError(`User ${id} is not registered`)
     }
 
-    const isPasswordsEqual = bcrypt.compare(password, user.password)
+    const isPasswordsEqual = await bcrypt.compare(password, user.password)
 
     if (!isPasswordsEqual) {
-      throw new Error(`Invalid password provided`)
+      throw new BadRequestException(`Invalid password provided`)
     }
 
     const userDto: CreateUserDto = new CreateUserDto(user)
@@ -62,14 +62,14 @@ export default class AuthService {
 
   public async refreshToken(refreshToken: string) {
     if (!refreshToken) {
-      throw new Error('User is not authorized.')
+      throw new UnauthorizedError()
     }
 
     const userData = this.tokenService.validateRefreshToken(refreshToken)
     const tokenFromDb = this.tokenService.findToken(refreshToken)
 
     if (!userData || !tokenFromDb) {
-      throw new Error('User is not authorized')
+      throw new UnauthorizedError()
     }
 
     const user = await this.users.findByPk((userData as any).id)
